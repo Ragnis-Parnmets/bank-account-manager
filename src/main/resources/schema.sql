@@ -57,5 +57,5 @@ ALTER TABLE transfer ADD CONSTRAINT transfer_account
     FOREIGN KEY (account_id)
     REFERENCES account (id);
 
--- End of file.
+-- End of a file.
 

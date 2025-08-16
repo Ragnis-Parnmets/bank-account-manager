@@ -1,5 +1,6 @@
 package com.example.bank_account_manager.infrastructure.rest;
 
+import com.example.bank_account_manager.infrastructure.rest.exception.AccountAlreadyExistsException;
 import com.example.bank_account_manager.infrastructure.rest.error.ApiError;
 import com.example.bank_account_manager.infrastructure.rest.exception.DataNotFoundException;
 import com.example.bank_account_manager.infrastructure.rest.exception.ForbiddenException;
@@ -51,6 +52,20 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         apiError.setPath(request.getRequestURI());
 
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
+
+    /**
+     * Handles cases where an account with the same account number already exists.
+     * Produces a 409-Conflict response with a message and the request path.
+     */
+    @ExceptionHandler(AccountAlreadyExistsException.class)
+    public ResponseEntity<ApiError> handleAccountAlreadyExists(AccountAlreadyExistsException ex,
+                                                               HttpServletRequest request) {
+        ApiError error = new ApiError();
+        error.setStatus(HttpStatus.CONFLICT);
+        error.setMessage(ex.getMessage());
+        error.setPath(request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
     }
 
     /**

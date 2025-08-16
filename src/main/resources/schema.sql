@@ -41,6 +41,9 @@ CREATE TABLE transfer (
     CONSTRAINT transfer_pk PRIMARY KEY (id)
 );
 
+-- Ensure uniqueness of the account number
+ALTER TABLE account ADD CONSTRAINT uk_account_number UNIQUE (account_number);
+
 -- foreign keys
 -- Reference: account_account_holder (table: account)
 ALTER TABLE account ADD CONSTRAINT account_account_holder
@@ -55,7 +58,8 @@ ALTER TABLE account ADD CONSTRAINT account_account_type
 -- Reference: transfer_account (table: transfer)
 ALTER TABLE transfer ADD CONSTRAINT transfer_account
     FOREIGN KEY (account_id)
-    REFERENCES account (id);
+    REFERENCES account (id)
+    ON DELETE CASCADE;
 
 -- End of a file.
 

@@ -12,7 +12,12 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-@Table(name = "ACCOUNT")
+@Table(
+        name = "ACCOUNT",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_account_account_number", columnNames = "ACCOUNT_NUMBER")
+        }
+)
 public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +26,7 @@ public class Account {
 
     @Size(max = 20)
     @NotNull
-    @Column(name = "ACCOUNT_NUMBER", nullable = false, length = 20)
+    @Column(name = "ACCOUNT_NUMBER", nullable = false, length = 20, unique = true)
     private String accountNumber;
 
     @NotNull

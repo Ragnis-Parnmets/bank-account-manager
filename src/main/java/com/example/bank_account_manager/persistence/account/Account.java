@@ -1,5 +1,7 @@
 package com.example.bank_account_manager.persistence.account;
 
+import com.example.bank_account_manager.persistence.accountholder.AccountHolder;
+import com.example.bank_account_manager.persistence.accounttype.AccountType;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

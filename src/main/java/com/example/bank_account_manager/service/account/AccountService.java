@@ -7,6 +7,10 @@ import com.example.bank_account_manager.infrastructure.rest.exception.AccountAlr
 import com.example.bank_account_manager.infrastructure.rest.exception.AccountNotFoundException;
 import com.example.bank_account_manager.infrastructure.rest.exception.DataNotFoundException;
 import com.example.bank_account_manager.persistence.account.*;
+import com.example.bank_account_manager.persistence.accountholder.AccountHolder;
+import com.example.bank_account_manager.persistence.accountholder.AccountHolderRepository;
+import com.example.bank_account_manager.persistence.accounttype.AccountType;
+import com.example.bank_account_manager.persistence.accounttype.AccountTypeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

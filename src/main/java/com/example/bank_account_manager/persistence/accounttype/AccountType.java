@@ -1,4 +1,4 @@
-package com.example.bank_account_manager.persistence.account;
+package com.example.bank_account_manager.persistence.accounttype;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

@@ -48,7 +48,8 @@ ALTER TABLE account ADD CONSTRAINT uk_account_number UNIQUE (account_number);
 -- Reference: account_account_holder (table: account)
 ALTER TABLE account ADD CONSTRAINT account_account_holder
     FOREIGN KEY (account_holder_id)
-    REFERENCES account_holder (id);
+    REFERENCES account_holder (id)
+    ON DELETE CASCADE;
 
 -- Reference: account_account_type (table: account)
 ALTER TABLE account ADD CONSTRAINT account_account_type

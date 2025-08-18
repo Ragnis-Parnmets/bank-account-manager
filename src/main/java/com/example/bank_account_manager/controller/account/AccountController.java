@@ -58,8 +58,7 @@ public class AccountController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete an account by ID",
             description = "Deletes the account and automatically removes its related transfers (ON DELETE CASCADE). " +
-                    "On success returns 204 No Content. "
-    )
+                    "On success returns 204 No Content. ")
     @ApiResponse(responseCode = "204", description = "Account deleted")
     @ApiResponse(responseCode = "404", description = "Account not found", content = @Content(schema = @Schema(hidden = true)))
     public ResponseEntity<Void> deleteAccount(@PathVariable Integer id) {

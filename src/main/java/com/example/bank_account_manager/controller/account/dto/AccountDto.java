@@ -2,7 +2,7 @@ package com.example.bank_account_manager.controller.account.dto;
 
 import lombok.Data;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 public class AccountDto {
@@ -13,5 +13,5 @@ public class AccountDto {
     private Integer accountTypeId;
     private String accountType;
     private String balance;
-    private Instant createdAt;
+    private LocalDateTime createdAt;
 }

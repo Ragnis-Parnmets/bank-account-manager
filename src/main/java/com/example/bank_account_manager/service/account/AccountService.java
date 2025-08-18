@@ -6,7 +6,9 @@ import com.example.bank_account_manager.controller.account.dto.AccountUpdateDto;
 import com.example.bank_account_manager.infrastructure.rest.exception.AccountAlreadyExistsException;
 import com.example.bank_account_manager.infrastructure.rest.exception.AccountNotFoundException;
 import com.example.bank_account_manager.infrastructure.rest.exception.DataNotFoundException;
-import com.example.bank_account_manager.persistence.account.*;
+import com.example.bank_account_manager.persistence.account.Account;
+import com.example.bank_account_manager.persistence.account.AccountMapper;
+import com.example.bank_account_manager.persistence.account.AccountRepository;
 import com.example.bank_account_manager.persistence.accountholder.AccountHolder;
 import com.example.bank_account_manager.persistence.accountholder.AccountHolderRepository;
 import com.example.bank_account_manager.persistence.accounttype.AccountType;
@@ -15,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -52,7 +54,7 @@ public class AccountService {
         }
 
         Account account = accountMapper.toEntity(dto);
-        account.setCreatedAt(Instant.now());
+        account.setCreatedAt(LocalDateTime.now());
         account.setAccountHolder(resolveAccountHolder(dto.getAccountHolderId()));
         account.setAccountType(resolveAccountType(dto.getAccountTypeId()));
         Account saved = accountRepository.save(account);

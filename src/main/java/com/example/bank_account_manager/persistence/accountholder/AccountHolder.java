@@ -32,4 +32,8 @@ public class AccountHolder {
     @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;
 
+    @NotNull
+    @Column(name = "STATUS", nullable = false, length = 20)
+    private String status;
+
 }

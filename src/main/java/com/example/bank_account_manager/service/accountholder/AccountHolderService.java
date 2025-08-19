@@ -20,18 +20,19 @@ import java.util.List;
 public class AccountHolderService {
 
     private static final String HOLDER_NOT_FOUND = "Account holder with id %d not found";
+    private static final String ACTIVE = "ACTIVE";
 
     private final AccountHolderRepository repository;
     private final AccountHolderMapper mapper;
 
     @Transactional(readOnly = true)
     public List<AccountHolderDto> findAll() {
-        return repository.findAll().stream().map(mapper::toDto).toList();
+        return repository.findAllByStatus(ACTIVE).stream().map(mapper::toDto).toList();
     }
 
     @Transactional(readOnly = true)
     public AccountHolderDto findById(Integer id) {
-        AccountHolder holder = repository.findById(id)
+        AccountHolder holder = repository.findByIdAndStatus(id, ACTIVE)
                 .orElseThrow(() -> new AccountHolderNotFoundException(HOLDER_NOT_FOUND.formatted(id)));
         return mapper.toDto(holder);
     }
@@ -39,6 +40,7 @@ public class AccountHolderService {
     public AccountHolderDto create(AccountHolderCreateDto dto) {
         AccountHolder entity = mapper.toEntity(dto);
         entity.setCreatedAt(LocalDateTime.now());
+        entity.setStatus(ACTIVE);
         AccountHolder saved = repository.save(entity);
         return mapper.toDto(saved);
     }
@@ -52,8 +54,9 @@ public class AccountHolderService {
     }
 
     public void delete(Integer id) {
-        AccountHolder existing = repository.findById(id)
+        AccountHolder existing = repository.findByIdAndStatus(id, ACTIVE)
                 .orElseThrow(() -> new AccountHolderNotFoundException(HOLDER_NOT_FOUND.formatted(id)));
-        repository.delete(existing);
+        existing.setStatus("DELETED");
+        repository.save(existing);
     }
 }

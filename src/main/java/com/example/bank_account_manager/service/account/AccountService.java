@@ -26,6 +26,7 @@ import java.util.List;
 public class AccountService {
 
     private static final String ACCOUNT_NOT_FOUND = "Account with id %d not found";
+    private static final String ACTIVE = "ACTIVE";
 
     private final AccountRepository accountRepository;
     private final AccountHolderRepository accountHolderRepository;
@@ -34,7 +35,7 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public List<AccountDto> findAll() {
-        return accountRepository.findAll()
+        return accountRepository.findAllByStatus(ACTIVE)
                 .stream()
                 .map(accountMapper::toDto)
                 .toList();
@@ -42,7 +43,7 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public AccountDto findById(Integer id) {
-        Account account = accountRepository.findById(id)
+        Account account = accountRepository.findByIdAndStatus(id, ACTIVE)
                 .orElseThrow(() -> new AccountNotFoundException(ACCOUNT_NOT_FOUND.formatted(id)));
         return accountMapper.toDto(account);
     }
@@ -55,6 +56,7 @@ public class AccountService {
 
         Account account = accountMapper.toEntity(dto);
         account.setCreatedAt(LocalDateTime.now());
+        account.setStatus(ACTIVE);
         account.setAccountHolder(resolveAccountHolder(dto.getAccountHolderId()));
         account.setAccountType(resolveAccountType(dto.getAccountTypeId()));
         Account saved = accountRepository.save(account);
@@ -82,9 +84,10 @@ public class AccountService {
     }
 
     public void delete(Integer id) {
-        Account existing = accountRepository.findById(id)
+        Account existing = accountRepository.findByIdAndStatus(id, ACTIVE)
                 .orElseThrow(() -> new AccountNotFoundException(ACCOUNT_NOT_FOUND.formatted(id)));
-        accountRepository.delete(existing);
+        existing.setStatus("DELETED");
+        accountRepository.save(existing);
     }
 
     private AccountHolder resolveAccountHolder(Integer id) {

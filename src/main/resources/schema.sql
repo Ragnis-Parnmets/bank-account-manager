@@ -10,6 +10,7 @@ CREATE TABLE account (
     account_type_id int  NOT NULL,
     balance decimal(15,2)  NOT NULL,
     created_at timestamp  NOT NULL,
+    status varchar(20) DEFAULT 'ACTIVE' NOT NULL,
     CONSTRAINT account_pk PRIMARY KEY (id)
 );
 
@@ -19,6 +20,7 @@ CREATE TABLE account_holder (
     first_name varchar(100)  NOT NULL,
     last_name varchar(100)  NOT NULL,
     created_at timestamp  NOT NULL,
+    status varchar(20) DEFAULT 'ACTIVE' NOT NULL,
     CONSTRAINT account_holder_pk PRIMARY KEY (id)
 );
 
@@ -48,8 +50,7 @@ ALTER TABLE account ADD CONSTRAINT uk_account_number UNIQUE (account_number);
 -- Reference: account_account_holder (table: account)
 ALTER TABLE account ADD CONSTRAINT account_account_holder
     FOREIGN KEY (account_holder_id)
-    REFERENCES account_holder (id)
-    ON DELETE CASCADE;
+    REFERENCES account_holder (id);
 
 -- Reference: account_account_type (table: account)
 ALTER TABLE account ADD CONSTRAINT account_account_type
@@ -59,8 +60,7 @@ ALTER TABLE account ADD CONSTRAINT account_account_type
 -- Reference: transfer_account (table: transfer)
 ALTER TABLE transfer ADD CONSTRAINT transfer_account
     FOREIGN KEY (account_id)
-    REFERENCES account (id)
-    ON DELETE CASCADE;
+    REFERENCES account (id);
 
 -- End of a file.
 

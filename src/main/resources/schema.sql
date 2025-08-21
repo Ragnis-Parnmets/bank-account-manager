@@ -29,6 +29,7 @@ CREATE TABLE account_type (
     id int GENERATED ALWAYS AS IDENTITY (START WITH 1) NOT NULL,
     type_name varchar(100)  NOT NULL,
     description varchar(255)  NOT NULL,
+    status varchar(20) DEFAULT 'ACTIVE' NOT NULL,
     CONSTRAINT account_type_pk PRIMARY KEY (id)
 );
 

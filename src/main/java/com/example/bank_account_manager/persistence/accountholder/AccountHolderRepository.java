@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface AccountHolderRepository extends JpaRepository<AccountHolder, Integer> {
     List<AccountHolder> findAllByStatus(String status);
+
     Optional<AccountHolder> findByIdAndStatus(Integer id, String status);
 }

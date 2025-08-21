@@ -27,4 +27,13 @@ public class GlobalExceptionHandler {
         apiError.setPath(request.getRequestURI());
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(AccountTypeNotFoundException.class)
+    public ResponseEntity<ApiError> handleAccountTypeNotFound(AccountTypeNotFoundException ex, HttpServletRequest request) {
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.NOT_FOUND);
+        apiError.setMessage(ex.getMessage());
+        apiError.setPath(request.getRequestURI());
+        return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
+    }
 }

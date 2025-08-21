@@ -26,4 +26,8 @@ public class AccountType {
     @Column(name = "DESCRIPTION", nullable = false)
     private String description;
 
+    @NotNull
+    @Column(name = "STATUS", nullable = false, length = 20)
+    private String status;
+
 }

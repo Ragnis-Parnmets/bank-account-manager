@@ -94,7 +94,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
         FieldError firstError = exception.getBindingResult()
                 .getFieldErrors()
-                .get(0);
+                .getFirst();
 
         ServletWebRequest servletReq = (ServletWebRequest) webRequest;
         String path = servletReq.getRequest().getRequestURI();

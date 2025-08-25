@@ -55,8 +55,7 @@ public class AccountHolderController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete an account holder by ID",
-            description = "Deletes the account holder and automatically removes its related accounts (ON DELETE CASCADE). " +
-                    "On success returns 204 No Content. ")
+            description = "Performs a soft delete by setting status to DELETED. On success returns 204 No Content. ")
     @ApiResponse(responseCode = "204", description = "Account holder deleted", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "404", description = "Account holder not found", content = @Content(schema = @Schema(hidden = true)))
     public ResponseEntity<Void> deleteHolder(@PathVariable Integer id) {

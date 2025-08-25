@@ -3,6 +3,7 @@ package com.example.bank_account_manager.controller.account;
 import com.example.bank_account_manager.controller.account.dto.AccountCreateDto;
 import com.example.bank_account_manager.controller.account.dto.AccountDto;
 import com.example.bank_account_manager.controller.account.dto.AccountUpdateDto;
+import com.example.bank_account_manager.infrastructure.rest.error.ApiError;
 import com.example.bank_account_manager.service.account.AccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -41,7 +42,7 @@ public class AccountController {
     @Operation(summary = "Create a new account")
     @ApiResponse(responseCode = "201", description = "Account created")
     @ApiResponse(responseCode = "409", description = "Account already exists. Account number must be unique.",
-            content = @Content(schema = @Schema(implementation = com.example.bank_account_manager.infrastructure.rest.error.ApiError.class)))
+            content = @Content(schema = @Schema(implementation = ApiError.class)))
     public ResponseEntity<AccountDto> createAccount(@Valid @RequestBody AccountCreateDto dto) {
         AccountDto created = accountService.create(dto);
         URI location = URI.create("/accounts/" + created.getId());
@@ -57,8 +58,7 @@ public class AccountController {
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Delete an account by ID",
-            description = "Deletes the account and automatically removes its related transfers (ON DELETE CASCADE). " +
-                    "On success returns 204 No Content. ")
+            description = "Performs a soft delete by setting status to DELETED. On success returns 204 No Content. ")
     @ApiResponse(responseCode = "204", description = "Account deleted")
     @ApiResponse(responseCode = "404", description = "Account not found", content = @Content(schema = @Schema(hidden = true)))
     public ResponseEntity<Void> deleteAccount(@PathVariable Integer id) {

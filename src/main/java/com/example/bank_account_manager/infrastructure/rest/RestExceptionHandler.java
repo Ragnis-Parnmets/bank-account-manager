@@ -4,6 +4,9 @@ import com.example.bank_account_manager.infrastructure.rest.exception.AccountAlr
 import com.example.bank_account_manager.infrastructure.rest.error.ApiError;
 import com.example.bank_account_manager.infrastructure.rest.exception.DataNotFoundException;
 import com.example.bank_account_manager.infrastructure.rest.exception.ForbiddenException;
+import com.example.bank_account_manager.infrastructure.rest.exception.InsufficientFundsException;
+import com.example.bank_account_manager.infrastructure.rest.exception.PositiveAmountException;
+import com.example.bank_account_manager.infrastructure.rest.exception.SameAccountException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -66,6 +69,19 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         error.setMessage(ex.getMessage());
         error.setPath(request.getRequestURI());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    /**
+     * Handles business rule violations for transfers.
+     * Produces a 400 Bad Request response.
+     */
+    @ExceptionHandler({InsufficientFundsException.class, PositiveAmountException.class, SameAccountException.class})
+    public ResponseEntity<ApiError> handleTransferBusinessErrors(RuntimeException ex, HttpServletRequest request) {
+        ApiError apiError = new ApiError();
+        apiError.setStatus(HttpStatus.BAD_REQUEST);
+        apiError.setMessage(ex.getMessage());
+        apiError.setPath(request.getRequestURI());
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
     /**

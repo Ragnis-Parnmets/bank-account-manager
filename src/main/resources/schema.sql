@@ -36,11 +36,11 @@ CREATE TABLE account_type (
 -- Table: transfer
 CREATE TABLE transfer (
     id int GENERATED ALWAYS AS IDENTITY (START WITH 1) NOT NULL,
-    account_id int  NOT NULL,
-    transfer_type varchar(100)  NOT NULL,
-    amount decimal(15,2)  NOT NULL,
-    transfer_date timestamp  NOT NULL,
-    description varchar(255)  NOT NULL,
+    from_account char(20) NOT NULL,
+    to_account char(20) NOT NULL,
+    amount decimal(15,2) NOT NULL,
+    description varchar(255) NOT NULL,
+    created_at timestamp NOT NULL,
     CONSTRAINT transfer_pk PRIMARY KEY (id)
 );
 
@@ -58,10 +58,4 @@ ALTER TABLE account ADD CONSTRAINT account_account_type
     FOREIGN KEY (account_type_id)
     REFERENCES account_type (id);
 
--- Reference: transfer_account (table: transfer)
-ALTER TABLE transfer ADD CONSTRAINT transfer_account
-    FOREIGN KEY (account_id)
-    REFERENCES account (id);
-
 -- End of a file.
-

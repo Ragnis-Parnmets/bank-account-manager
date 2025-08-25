@@ -18,7 +18,7 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/holders")
+@RequestMapping("/account-holders")
 @RequiredArgsConstructor
 @Tag(name = "Account holders", description = "Operations for managing account holders")
 public class AccountHolderController {

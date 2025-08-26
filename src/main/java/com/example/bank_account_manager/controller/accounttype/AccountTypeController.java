@@ -10,15 +10,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
 
+@Validated
 @RestController
-@RequestMapping("/account-types")
+@RequestMapping("/api/v1/account-types")
 @RequiredArgsConstructor
 @Tag(name = "Account types", description = "Operations for managing account types")
 public class AccountTypeController {
@@ -33,7 +36,7 @@ public class AccountTypeController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get account type by ID")
-    public ResponseEntity<AccountTypeDto> getAccountTypeById(@PathVariable Integer id) {
+    public ResponseEntity<AccountTypeDto> getAccountTypeById(@PathVariable @Positive Integer id) {
         return ResponseEntity.ok(accountTypeService.findById(id));
     }
 
@@ -42,13 +45,13 @@ public class AccountTypeController {
     @ApiResponse(responseCode = "201", description = "Account type created")
     public ResponseEntity<AccountTypeDto> createAccountType(@Valid @RequestBody AccountTypeCreateDto dto) {
         AccountTypeDto created = accountTypeService.create(dto);
-        URI location = URI.create("/account-types/" + created.getId());
+        URI location = URI.create("/api/v1/account-types/" + created.getId());
         return ResponseEntity.created(location).body(created);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update an existing account type")
-    public ResponseEntity<AccountTypeDto> updateAccountType(@PathVariable Integer id, @Valid @RequestBody AccountTypeUpdateDto dto) {
+    public ResponseEntity<AccountTypeDto> updateAccountType(@PathVariable @Positive Integer id, @Valid @RequestBody AccountTypeUpdateDto dto) {
         AccountTypeDto updated = accountTypeService.update(id, dto);
         return ResponseEntity.ok(updated);
     }
@@ -58,7 +61,7 @@ public class AccountTypeController {
             description = "Performs a soft delete by setting status to DELETED. On success returns 204 No Content.")
     @ApiResponse(responseCode = "204", description = "Account type deleted", content = @Content(schema = @Schema(hidden = true)))
     @ApiResponse(responseCode = "404", description = "Account type not found", content = @Content(schema = @Schema(hidden = true)))
-    public ResponseEntity<Void> deleteAccountType(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteAccountType(@PathVariable @Positive Integer id) {
         accountTypeService.delete(id);
         return ResponseEntity.noContent().build();
     }

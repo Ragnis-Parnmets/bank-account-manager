@@ -10,15 +10,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
 
+@Validated
 @RestController
-@RequestMapping("/transfers")
+@RequestMapping("/api/v1/transfers")
 @RequiredArgsConstructor
 @Tag(name = "Transfers", description = "Operations for transferring money between accounts")
 public class TransferController {
@@ -33,7 +36,7 @@ public class TransferController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get transfer by ID")
-    public ResponseEntity<TransferDto> getTransferById(@PathVariable Integer id) {
+    public ResponseEntity<TransferDto> getTransferById(@PathVariable @Positive Integer id) {
         return ResponseEntity.ok(transferService.findById(id));
     }
 
@@ -44,7 +47,7 @@ public class TransferController {
             content = @Content(schema = @Schema(implementation = ApiError.class)))
     public ResponseEntity<TransferDto> createTransfer(@Valid @RequestBody TransferCreateDto dto) {
         TransferDto created = transferService.create(dto);
-        URI location = URI.create("/transfers/" + created.getId());
+        URI location = URI.create("/api/v1/transfers/" + created.getId());
         return ResponseEntity.created(location).body(created);
     }
 }

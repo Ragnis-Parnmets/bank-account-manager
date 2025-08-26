@@ -1,7 +1,6 @@
 package com.example.bank_account_manager.controller.account.dto;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -9,15 +8,18 @@ import java.math.BigDecimal;
 @Data
 public class AccountUpdateDto {
     @Size(max = 20)
-    @NotNull
+    @NotBlank
     private String accountNumber;
 
     @NotNull
+    @Positive
     private Integer accountHolderId;
 
     @NotNull
+    @Positive
     private Integer accountTypeId;
 
     @NotNull
+    @PositiveOrZero
     private BigDecimal balance;
 }

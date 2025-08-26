@@ -11,15 +11,18 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
 
+@Validated
 @RestController
-@RequestMapping("/accounts")
+@RequestMapping("/api/v1/accounts")
 @RequiredArgsConstructor
 @Tag(name = "Accounts", description = "Operations for managing bank accounts")
 public class AccountController {
@@ -34,7 +37,7 @@ public class AccountController {
 
     @GetMapping("/{id}")
     @Operation(summary = "Get account by ID")
-    public ResponseEntity<AccountDto> getAccountById(@PathVariable Integer id) {
+    public ResponseEntity<AccountDto> getAccountById(@PathVariable @Positive Integer id) {
         return ResponseEntity.ok(accountService.findById(id));
     }
 
@@ -45,13 +48,13 @@ public class AccountController {
             content = @Content(schema = @Schema(implementation = ApiError.class)))
     public ResponseEntity<AccountDto> createAccount(@Valid @RequestBody AccountCreateDto dto) {
         AccountDto created = accountService.create(dto);
-        URI location = URI.create("/accounts/" + created.getId());
+        URI location = URI.create("/api/v1/accounts/" + created.getId());
         return ResponseEntity.created(location).body(created);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Update an existing account")
-    public ResponseEntity<AccountDto> updateAccount(@PathVariable Integer id, @Valid @RequestBody AccountUpdateDto dto) {
+    public ResponseEntity<AccountDto> updateAccount(@PathVariable @Positive Integer id, @Valid @RequestBody AccountUpdateDto dto) {
         AccountDto updated = accountService.update(id, dto);
         return ResponseEntity.ok(updated);
     }
@@ -61,7 +64,7 @@ public class AccountController {
             description = "Performs a soft delete by setting status to DELETED. On success returns 204 No Content. ")
     @ApiResponse(responseCode = "204", description = "Account deleted")
     @ApiResponse(responseCode = "404", description = "Account not found", content = @Content(schema = @Schema(hidden = true)))
-    public ResponseEntity<Void> deleteAccount(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteAccount(@PathVariable @Positive Integer id) {
         accountService.delete(id);
         return ResponseEntity.noContent().build();
     }

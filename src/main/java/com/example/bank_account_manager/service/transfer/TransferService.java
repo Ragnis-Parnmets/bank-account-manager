@@ -13,6 +13,7 @@ import com.example.bank_account_manager.persistence.transfer.Transfer;
 import com.example.bank_account_manager.persistence.transfer.TransferMapper;
 import com.example.bank_account_manager.persistence.transfer.TransferRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,7 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class TransferService {
 
     private static final String ACTIVE = "ACTIVE";
@@ -56,6 +58,7 @@ public class TransferService {
 
         // Ensure sufficient funds
         if (from.getBalance().compareTo(dto.getAmount()) < 0) {
+            log.warn("Transfer failed: insufficient funds in the source account (id={})", from.getId());
             throw new InsufficientFundsException("Insufficient funds in the source account");
         }
 
@@ -70,6 +73,7 @@ public class TransferService {
         Transfer transfer = transferMapper.toEntity(dto);
         transfer.setCreatedAt(LocalDateTime.now());
         Transfer saved = transferRepository.save(transfer);
+        log.info("Successful transfer created (id={})", saved.getId());
         return transferMapper.toDto(saved);
     }
 

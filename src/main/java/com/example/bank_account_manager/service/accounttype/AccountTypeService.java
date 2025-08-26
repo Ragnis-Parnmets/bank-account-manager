@@ -8,6 +8,8 @@ import com.example.bank_account_manager.persistence.accounttype.AccountType;
 import com.example.bank_account_manager.persistence.accounttype.AccountTypeMapper;
 import com.example.bank_account_manager.persistence.accounttype.AccountTypeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,11 +26,13 @@ public class AccountTypeService {
     private final AccountTypeRepository repository;
     private final AccountTypeMapper mapper;
 
+    @Cacheable("accountTypes")
     @Transactional(readOnly = true)
     public List<AccountTypeDto> findAll() {
         return repository.findAllByStatus(ACTIVE).stream().map(mapper::toDto).toList();
     }
 
+    @Cacheable(cacheNames = "accountTypeById", key = "#id")
     @Transactional(readOnly = true)
     public AccountTypeDto findById(Integer id) {
         AccountType type = repository.findByIdAndStatus(id, ACTIVE)
@@ -36,6 +40,7 @@ public class AccountTypeService {
         return mapper.toDto(type);
     }
 
+    @CacheEvict(cacheNames = {"accountTypes", "accountTypeById"}, allEntries = true)
     public AccountTypeDto create(AccountTypeCreateDto dto) {
         AccountType entity = mapper.toEntity(dto);
         entity.setStatus(ACTIVE);
@@ -43,6 +48,7 @@ public class AccountTypeService {
         return mapper.toDto(saved);
     }
 
+    @CacheEvict(cacheNames = {"accountTypes", "accountTypeById"}, allEntries = true)
     public AccountTypeDto update(Integer id, AccountTypeUpdateDto dto) {
         AccountType existing = repository.findByIdAndStatus(id, ACTIVE)
                 .orElseThrow(() -> new AccountTypeNotFoundException(TYPE_NOT_FOUND.formatted(id)));
@@ -51,6 +57,7 @@ public class AccountTypeService {
         return mapper.toDto(saved);
     }
 
+    @CacheEvict(cacheNames = {"accountTypes", "accountTypeById"}, allEntries = true)
     public void delete(Integer id) {
         AccountType existing = repository.findByIdAndStatus(id, ACTIVE)
                 .orElseThrow(() -> new AccountTypeNotFoundException(TYPE_NOT_FOUND.formatted(id)));

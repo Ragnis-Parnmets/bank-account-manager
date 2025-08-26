@@ -8,6 +8,8 @@ import com.example.bank_account_manager.persistence.accountholder.AccountHolder;
 import com.example.bank_account_manager.persistence.accountholder.AccountHolderMapper;
 import com.example.bank_account_manager.persistence.accountholder.AccountHolderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,11 +27,13 @@ public class AccountHolderService {
     private final AccountHolderRepository repository;
     private final AccountHolderMapper mapper;
 
+    @Cacheable("accountHolders")
     @Transactional(readOnly = true)
     public List<AccountHolderDto> findAll() {
         return repository.findAllByStatus(ACTIVE).stream().map(mapper::toDto).toList();
     }
 
+    @Cacheable(cacheNames = "accountHolderById", key = "#id")
     @Transactional(readOnly = true)
     public AccountHolderDto findById(Integer id) {
         AccountHolder holder = repository.findByIdAndStatus(id, ACTIVE)
@@ -37,6 +41,7 @@ public class AccountHolderService {
         return mapper.toDto(holder);
     }
 
+    @CacheEvict(cacheNames = {"accountHolders", "accountHolderById"}, allEntries = true)
     public AccountHolderDto create(AccountHolderCreateDto dto) {
         AccountHolder entity = mapper.toEntity(dto);
         entity.setCreatedAt(LocalDateTime.now());
@@ -45,6 +50,7 @@ public class AccountHolderService {
         return mapper.toDto(saved);
     }
 
+    @CacheEvict(cacheNames = {"accountHolders", "accountHolderById"}, allEntries = true)
     public AccountHolderDto update(Integer id, AccountHolderUpdateDto dto) {
         AccountHolder existing = repository.findByIdAndStatus(id, ACTIVE)
                 .orElseThrow(() -> new AccountHolderNotFoundException(HOLDER_NOT_FOUND.formatted(id)));
@@ -53,6 +59,7 @@ public class AccountHolderService {
         return mapper.toDto(saved);
     }
 
+    @CacheEvict(cacheNames = {"accountHolders", "accountHolderById"}, allEntries = true)
     public void delete(Integer id) {
         AccountHolder existing = repository.findByIdAndStatus(id, ACTIVE)
                 .orElseThrow(() -> new AccountHolderNotFoundException(HOLDER_NOT_FOUND.formatted(id)));

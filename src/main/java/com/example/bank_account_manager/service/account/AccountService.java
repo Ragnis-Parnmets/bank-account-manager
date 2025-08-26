@@ -64,7 +64,7 @@ public class AccountService {
     }
 
     public AccountDto update(Integer id, AccountUpdateDto dto) {
-        Account existing = accountRepository.findById(id)
+        Account existing = accountRepository.findByIdAndStatus(id, ACTIVE)
                 .orElseThrow(() -> new AccountNotFoundException(ACCOUNT_NOT_FOUND.formatted(id)));
 
         // If an account number is provided and changed, ensure uniqueness against other accounts

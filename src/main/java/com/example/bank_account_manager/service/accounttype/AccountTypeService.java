@@ -44,7 +44,7 @@ public class AccountTypeService {
     }
 
     public AccountTypeDto update(Integer id, AccountTypeUpdateDto dto) {
-        AccountType existing = repository.findById(id)
+        AccountType existing = repository.findByIdAndStatus(id, ACTIVE)
                 .orElseThrow(() -> new AccountTypeNotFoundException(TYPE_NOT_FOUND.formatted(id)));
         mapper.updateEntity(dto, existing);
         AccountType saved = repository.save(existing);

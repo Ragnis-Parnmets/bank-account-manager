@@ -46,7 +46,7 @@ public class AccountHolderService {
     }
 
     public AccountHolderDto update(Integer id, AccountHolderUpdateDto dto) {
-        AccountHolder existing = repository.findById(id)
+        AccountHolder existing = repository.findByIdAndStatus(id, ACTIVE)
                 .orElseThrow(() -> new AccountHolderNotFoundException(HOLDER_NOT_FOUND.formatted(id)));
         mapper.updateEntity(dto, existing);
         AccountHolder saved = repository.save(existing);

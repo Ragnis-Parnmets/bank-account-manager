@@ -13,7 +13,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -44,7 +44,7 @@ public class AccountHolderService {
     @CacheEvict(cacheNames = {"accountHolders", "accountHolderById"}, allEntries = true)
     public AccountHolderDto create(AccountHolderCreateDto dto) {
         AccountHolder entity = mapper.toEntity(dto);
-        entity.setCreatedAt(LocalDateTime.now());
+        entity.setCreatedAt(Instant.now());
         entity.setStatus(ACTIVE);
         AccountHolder saved = repository.save(entity);
         return mapper.toDto(saved);

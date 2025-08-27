@@ -7,9 +7,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = com.example.bank_account_manager.infrastructure.time.TimeConfig.class)
 public interface AccountHolderMapper {
 
+    @Mapping(target = "createdAt", source = "createdAt", qualifiedByName = "instantToDateTime")
     AccountHolderDto toDto(AccountHolder entity);
 
     @Mapping(target = "id", ignore = true)

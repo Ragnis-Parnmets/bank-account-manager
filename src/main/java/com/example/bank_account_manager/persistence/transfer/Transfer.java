@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -40,6 +40,6 @@ public class Transfer {
 
     @NotNull
     @Column(name = "CREATED_AT", nullable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
 }

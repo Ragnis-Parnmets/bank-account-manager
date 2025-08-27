@@ -12,7 +12,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = com.example.bank_account_manager.infrastructure.time.TimeConfig.class)
 public interface AccountMapper {
 
     @Mapping(source = "accountHolder.id", target = "accountHolderId")
@@ -20,6 +20,7 @@ public interface AccountMapper {
     @Mapping(target = "accountHolder", expression = "java(fullName(account.getAccountHolder().getFirstName(), account.getAccountHolder().getLastName()))")
     @Mapping(target = "accountType", source = "accountType.typeName")
     @Mapping(target = "balance", expression = "java(formatBalance(account.getBalance()))")
+    @Mapping(target = "createdAt", source = "createdAt", qualifiedByName = "instantToDateTime")
     AccountDto toDto(Account account);
 
     // Map basic fields from create DTO to entity; relations handled in service

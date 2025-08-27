@@ -9,7 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -47,7 +47,7 @@ public class Account {
 
     @NotNull
     @Column(name = "CREATED_AT", nullable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @NotNull
     @Column(name = "STATUS", nullable = false, length = 20)

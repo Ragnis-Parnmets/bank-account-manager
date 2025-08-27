@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -69,7 +69,7 @@ public class TransferService {
 
         // Save transfer record
         Transfer transfer = transferMapper.toEntity(dto);
-        transfer.setCreatedAt(LocalDateTime.now());
+        transfer.setCreatedAt(Instant.now());
         Transfer saved = transferRepository.save(transfer);
         log.info("Successful transfer created (id={})", saved.getId());
         return transferMapper.toDto(saved);

@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -56,7 +56,7 @@ public class AccountService {
         }
 
         Account account = accountMapper.toEntity(dto);
-        account.setCreatedAt(LocalDateTime.now());
+        account.setCreatedAt(Instant.now());
         account.setStatus(ACTIVE);
         account.setAccountHolder(resolveAccountHolder(dto.getAccountHolderId()));
         account.setAccountType(resolveAccountType(dto.getAccountTypeId()));

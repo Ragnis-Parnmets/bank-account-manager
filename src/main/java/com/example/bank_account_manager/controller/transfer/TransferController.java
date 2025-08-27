@@ -30,12 +30,16 @@ public class TransferController {
 
     @GetMapping
     @Operation(summary = "List all transfers")
+    @ApiResponse(responseCode = "200", description = "Transfers fetched successfully")
     public ResponseEntity<List<TransferDto>> getAllTransfers() {
         return ResponseEntity.ok(transferService.findAll());
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get transfer by ID")
+    @ApiResponse(responseCode = "200", description = "Transfer found")
+    @ApiResponse(responseCode = "404", description = "Transfer not found",
+            content = @Content(schema = @Schema(implementation = ApiError.class)))
     public ResponseEntity<TransferDto> getTransferById(@PathVariable @Positive Integer id) {
         return ResponseEntity.ok(transferService.findById(id));
     }

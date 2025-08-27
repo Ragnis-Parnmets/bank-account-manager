@@ -7,8 +7,7 @@ import java.math.BigDecimal;
 
 @Data
 public class AccountCreateDto {
-    @Size(max = 20)
-    @NotBlank
+    @Pattern(regexp = "[A-Z]{2}\\d{18}", message = "Account number must be exactly 20 characters without spaces (2 letters + 18 numbers)")
     private String accountNumber;
 
     @NotNull

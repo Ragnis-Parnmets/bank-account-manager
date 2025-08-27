@@ -31,12 +31,16 @@ public class AccountController {
 
     @GetMapping
     @Operation(summary = "List all accounts")
+    @ApiResponse(responseCode = "200", description = "Accounts fetched successfully")
     public ResponseEntity<List<AccountDto>> getAllAccounts() {
         return ResponseEntity.ok(accountService.findAll());
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Get account by ID")
+    @ApiResponse(responseCode = "200", description = "Account found")
+    @ApiResponse(responseCode = "404", description = "Account not found",
+            content = @Content(schema = @Schema(implementation = ApiError.class)))
     public ResponseEntity<AccountDto> getAccountById(@PathVariable @Positive Integer id) {
         return ResponseEntity.ok(accountService.findById(id));
     }
@@ -44,6 +48,8 @@ public class AccountController {
     @PostMapping
     @Operation(summary = "Create a new account")
     @ApiResponse(responseCode = "201", description = "Account created")
+    @ApiResponse(responseCode = "400", description = "Validation error",
+            content = @Content(schema = @Schema(implementation = ApiError.class)))
     @ApiResponse(responseCode = "409", description = "Account already exists. Account number must be unique.",
             content = @Content(schema = @Schema(implementation = ApiError.class)))
     public ResponseEntity<AccountDto> createAccount(@Valid @RequestBody AccountCreateDto dto) {
@@ -54,6 +60,11 @@ public class AccountController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update an existing account")
+    @ApiResponse(responseCode = "200", description = "Account updated")
+    @ApiResponse(responseCode = "400", description = "Validation error",
+            content = @Content(schema = @Schema(implementation = ApiError.class)))
+    @ApiResponse(responseCode = "404", description = "Account not found",
+            content = @Content(schema = @Schema(implementation = ApiError.class)))
     public ResponseEntity<AccountDto> updateAccount(@PathVariable @Positive Integer id, @Valid @RequestBody AccountUpdateDto dto) {
         AccountDto updated = accountService.update(id, dto);
         return ResponseEntity.ok(updated);
@@ -63,7 +74,8 @@ public class AccountController {
     @Operation(summary = "Delete an account by ID",
             description = "Performs a soft delete by setting status to DELETED. On success returns 204 No Content. ")
     @ApiResponse(responseCode = "204", description = "Account deleted")
-    @ApiResponse(responseCode = "404", description = "Account not found", content = @Content(schema = @Schema(hidden = true)))
+    @ApiResponse(responseCode = "404", description = "Account not found",
+            content = @Content(schema = @Schema(hidden = true)))
     public ResponseEntity<Void> deleteAccount(@PathVariable @Positive Integer id) {
         accountService.delete(id);
         return ResponseEntity.noContent().build();

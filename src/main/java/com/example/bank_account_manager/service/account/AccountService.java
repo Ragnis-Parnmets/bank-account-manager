@@ -27,6 +27,7 @@ public class AccountService {
 
     private static final String ACCOUNT_NOT_FOUND = "Account with id %d not found";
     private static final String ACTIVE = "ACTIVE";
+    private static final String ACCOUNT_EXISTS = "Account already exists. Account number must be unique.";
 
     private final AccountRepository accountRepository;
     private final AccountHolderRepository accountHolderRepository;
@@ -51,7 +52,7 @@ public class AccountService {
     public AccountDto create(AccountCreateDto dto) {
         String accountNumber = dto.getAccountNumber();
         if (accountRepository.existsByAccountNumber(accountNumber)) {
-            throw new AccountAlreadyExistsException("Account already exists. Account number must be unique.");
+            throw new AccountAlreadyExistsException(ACCOUNT_EXISTS);
         }
 
         Account account = accountMapper.toEntity(dto);
@@ -72,7 +73,7 @@ public class AccountService {
             String newNumber = dto.getAccountNumber();
             if (!newNumber.equals(existing.getAccountNumber())
                     && accountRepository.existsByAccountNumberAndIdNot(newNumber, id)) {
-                throw new AccountAlreadyExistsException("Account already exists. Account number must be unique.");
+                throw new AccountAlreadyExistsException(ACCOUNT_EXISTS);
             }
         }
 

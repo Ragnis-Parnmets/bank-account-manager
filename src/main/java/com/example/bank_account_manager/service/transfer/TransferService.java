@@ -51,10 +51,8 @@ public class TransferService {
     public TransferDto create(TransferCreateDto dto) {
         validateTransfer(dto);
 
-        Account from = accountRepository.findByAccountNumberAndStatus(dto.getFromAccount(), ACTIVE)
-                .orElseThrow(() -> new AccountNotFoundException("From account with number %s not found".formatted(dto.getFromAccount())));
-        Account to = accountRepository.findByAccountNumberAndStatus(dto.getToAccount(), ACTIVE)
-                .orElseThrow(() -> new AccountNotFoundException("To account with number %s not found".formatted(dto.getToAccount())));
+        Account from = findActiveAccount(dto.getFromAccount(), true);
+        Account to = findActiveAccount(dto.getToAccount(), false);
 
         // Ensure sufficient funds
         if (from.getBalance().compareTo(dto.getAmount()) < 0) {
@@ -75,6 +73,13 @@ public class TransferService {
         Transfer saved = transferRepository.save(transfer);
         log.info("Successful transfer created (id={})", saved.getId());
         return transferMapper.toDto(saved);
+    }
+
+    private Account findActiveAccount(String number, boolean source) {
+        return accountRepository.findByAccountNumberAndStatus(number, ACTIVE)
+                .orElseThrow(() -> new AccountNotFoundException(
+                        (source ? "From account with number %s not found" : "To account with number %s not found").formatted(number)
+                ));
     }
 
     private void validateTransfer(TransferCreateDto dto) {

@@ -7,14 +7,10 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-import java.util.List;
-
 @Mapper(componentModel = "spring")
 public interface AccountTypeMapper {
 
     AccountTypeDto toDto(AccountType entity);
-
-    List<AccountTypeDto> toDtoList(List<AccountType> entities);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "status", ignore = true)
